@@ -44,6 +44,8 @@ jobs:
 
         # API 응답 처리
         feedback=$(echo $response | jq -r '.choices[0].message.content')
-
+        echo feedback = $feedback
+        
         # 리뷰 시작
+        echo review start
         gh pr review --comment -b "```Review from AI:\n$feedback```"

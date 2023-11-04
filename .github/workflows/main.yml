@@ -11,8 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
@@ -25,9 +27,11 @@ jobs:
     - name: Generate Code Review
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
       run: |
         # PR에서 변경된 코드 추출
-        changes=$(git diff --name-only origin/${{ github.base_ref }}..origin/${{ github.head_ref }})
+        changes=$(git diff --name-only ${{ github.base_ref }}..${{ github.head_ref }})
         modified_code=""
 
         for file in $changes; do

@@ -48,4 +48,5 @@ jobs:
         
         # 리뷰 시작
         echo review start
-        gh pr review --comment -b "Review from AI:\n 피드백~~~ "
+        echo pr number = ${{ github.pr_number }} 
+        gh pr review ${{ github.pr_number }} --comment -b "Review from AI:\n 피드백~~~ "

@@ -1,56 +1,21 @@
-name: OpenAI Code Review
+name: Code Review
+
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   pull_request:
-    types:
+      types:
       - opened
       - synchronize
 
 jobs:
   code_review:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
-
-    - name: Install Dependencies
-      run: npm install
-
-    - name: Generate Code Review
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-      run: |
-        # PR에서 변경된 코드 추출
-        changes=$(git diff --name-only origin/${{ github.base_ref }}..origin/${{ github.head_ref }})
-        modified_code=""
-
-        for file in $changes; do
-          modified_code="${modified_code}$(cat $file)"
-        done
-
-        # OpenAI API를 사용하여 코드 리뷰 요청 생성
-        prompt="Review the following code:\n$modified_code"
-        echo 수정 코드 = $modified_code
-        echo ==========
-        response=$(curl -X POST -H "Authorization: Bearer $OPENAI_API_KEY" -H "Content-Type: application/json" -d "{\"prompt\": \"$prompt\", \"max_tokens\": 150}" "https://api.openai.com/v1/completions")
-        echo 반환 = $response
-        echo ==========
-        
-        # API 응답 처리
-        feedback=$(echo $response | jq -r '.choices[0]')
-        echo 피드백 = $feedback
-        
-        # 리뷰 시작
-        echo review start
-        echo pr number = ${{ github.pr_number }} 
-        gh pr review ${{ github.pr_number }} --comment -b "Review from AI:\n 피드백~~~ "
+      - uses: anc95/ChatGPT-CodeReview@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LANGUAGE: Korean

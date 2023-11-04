@@ -15,7 +15,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/review")
-    public ResponseEntity<Mono<OpenAIResponse>> review(@RequestBody ReviewRequest reviewRequest) {
+    public ResponseEntity<Mono<?>> review(@RequestBody ReviewRequest reviewRequest) {
         return ResponseEntity.ok(
                 Mono.just(reviewService.review(reviewRequest))
         );

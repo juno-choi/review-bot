@@ -40,9 +40,10 @@ jobs:
 
         # OpenAI API를 사용하여 코드 리뷰 요청 생성
         prompt="Review the following code:\n$modified_code"
-        echo prompt = ${prompt}
+        echo prompt = $prompt
         response=$(curl -X POST -H "Authorization: Bearer $OPENAI_API_KEY" -H "Content-Type: application/json" -d "{\"prompt\": \"$prompt\", \"max_tokens\": 150}" "https://api.openai.com/v1/completions")
-
+        echo response = $response
+        
         # API 응답 처리
         feedback=$(echo $response | jq -r '.choices[0]')
         echo feedback = $feedback

@@ -45,5 +45,8 @@ jobs:
         # API 응답 처리
         feedback=$(echo $response | jq -r '.choices[0].text')
 
-        # 리뷰 댓글 추가
+        # 리뷰 시작
         gh pr review ${{ github.pr_number }} -b "```Review from AI:\n$feedback```"
+        
+        # 리뷰 제출
+        gh pr review ${{ github.pr_number }} --submit

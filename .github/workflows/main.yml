@@ -46,7 +46,4 @@ jobs:
         feedback=$(echo $response | jq -r '.choices[0].text')
 
         # 리뷰 시작
-        gh pr review ${{ github.pr_number }} -b "```Review from AI:\n$feedback```"
-        
-        # 리뷰 제출
-        gh pr review ${{ github.pr_number }} --submit
+        gh pr review --comment -b "```Review from AI:\n$feedback```"
